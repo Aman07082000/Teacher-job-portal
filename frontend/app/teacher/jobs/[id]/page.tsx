@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/app/dashboard-layout'
 import RoleGuard from '@/components/RoleGuard'
@@ -31,11 +31,7 @@ export default function JobDetail() {
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchJobDetails()
-  }, [jobId])
-
-  const fetchJobDetails = async () => {
+  const fetchJobDetails = useCallback(async () => {
     try {
       // For now, we'll get all jobs and find the specific one
       // In a real app, you'd have a dedicated endpoint for single job
@@ -53,7 +49,11 @@ export default function JobDetail() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [jobId])
+
+  useEffect(() => {
+    fetchJobDetails()
+  }, [jobId, fetchJobDetails])
 
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -146,7 +146,7 @@ export default function JobDetail() {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h1 className="text-3xl font-bold text-blue-600 mb-2">{job.title}</h1>
-                <div className="flex flex-wrap gap-4 text-gray-600">
+                <div className="flex flex-wrap gap-4 text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-1">
                     <FiMapPin className="w-5 h-5" />
                     {job.location}
@@ -179,7 +179,7 @@ export default function JobDetail() {
           <div className="card">
             <h2 className="text-2xl font-bold mb-4">Job Description</h2>
             <div className="prose max-w-none">
-              <p className="text-gray-700 whitespace-pre-line">{job.description}</p>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{job.description}</p>
             </div>
           </div>
 
@@ -196,7 +196,7 @@ export default function JobDetail() {
 
               <form onSubmit={handleApply} className="space-y-4" encType="multipart/form-data">
                 <div>
-                  <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Cover Letter *
                   </label>
                   <textarea
@@ -209,7 +209,7 @@ export default function JobDetail() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="experienceYears" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="experienceYears" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Experience (in years) *
                   </label>
                   <input
@@ -224,7 +224,7 @@ export default function JobDetail() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="resume" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Upload Resume (PDF, DOC, DOCX) *
                   </label>
                   <input
@@ -265,8 +265,8 @@ export default function JobDetail() {
           {/* Requirements Section */}
           <div className="card">
             <h2 className="text-2xl font-bold mb-4">Requirements</h2>
-            <ul className="list-disc list-inside space-y-2 text-gray-700">
-              <li>Bachelor's degree in Education or related field</li>
+            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+              <li>Bachelor&apos;s degree in Education or related field</li>
               <li>Teaching certification in {job.subject_expertise}</li>
               <li>Experience teaching at appropriate grade level</li>
               <li>Strong communication and classroom management skills</li>

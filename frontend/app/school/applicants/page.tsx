@@ -68,7 +68,7 @@ export default function ManageApplicants() {
           <div className="text-center py-8">Loading applicants...</div>
         ) : applicants.length === 0 ? (
           <div className="card text-center py-8">
-            <p className="text-gray-500">No applications received yet.</p>
+            <p className="text-gray-500 dark:text-gray-400">No applications received yet.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -77,10 +77,10 @@ export default function ManageApplicants() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-lg font-bold">{app.teacher_name}</h3>
-                    <p className="text-gray-600 mb-2">
+                    <p className="text-gray-600 dark:text-gray-400 mb-2">
                       Position: <span className="font-semibold">{app.job_title}</span>
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Applied: {new Date(app.applied_at).toLocaleDateString()}
                     </p>
                   </div>

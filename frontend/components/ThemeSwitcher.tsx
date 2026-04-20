@@ -39,25 +39,40 @@ export function ThemeSwitcher() {
   const { theme, changeTheme } = useThemeMode()
 
   return (
-    <div className="flex gap-2 items-center">
-      <span className="font-medium">Theme:</span>
+    <div className="flex gap-2 items-center bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md">
+      <span className="font-medium text-gray-900 dark:text-gray-100">Theme:</span>
       <button
-        className={`btn ${theme === 'light' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        className={`px-3 py-1 rounded-md font-semibold transition-all duration-200 ${
+          theme === 'light' 
+            ? 'bg-blue-600 text-white shadow-md' 
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+        }`}
         onClick={() => changeTheme('light')}
+        title="Light theme"
       >
-        Light
+        ☀️ Light
       </button>
       <button
-        className={`btn ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        className={`px-3 py-1 rounded-md font-semibold transition-all duration-200 ${
+          theme === 'dark' 
+            ? 'bg-blue-600 text-white shadow-md' 
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+        }`}
         onClick={() => changeTheme('dark')}
+        title="Dark theme"
       >
-        Dark
+        🌙 Dark
       </button>
       <button
-        className={`btn ${theme === 'system' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        className={`px-3 py-1 rounded-md font-semibold transition-all duration-200 ${
+          theme === 'system' 
+            ? 'bg-blue-600 text-white shadow-md' 
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+        }`}
         onClick={() => changeTheme('system')}
+        title="System theme"
       >
-        System
+        🖥️ System
       </button>
     </div>
   )

@@ -61,7 +61,7 @@ export default function PostJob() {
 
         <form onSubmit={handleSubmit} className="card space-y-4">
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
               Job Title
             </label>
             <input
@@ -76,7 +76,7 @@ export default function PostJob() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
               Job Description
             </label>
             <textarea
@@ -92,7 +92,7 @@ export default function PostJob() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                 Location
               </label>
               <input
@@ -107,7 +107,7 @@ export default function PostJob() {
             </div>
 
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                 Subject/Expertise
               </label>
               <input
@@ -123,7 +123,7 @@ export default function PostJob() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">
+            <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
               Salary Range
             </label>
             <input

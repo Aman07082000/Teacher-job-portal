@@ -50,6 +50,7 @@ export const teacherAPI = {
     return apiClient.post(`/teachers/jobs/${jobId}/apply`, data)
   },
   trackApplications: () => apiClient.get('/teachers/applications'),
+  getApplicationDetail: (applicationId: number) => apiClient.get(`/teachers/applications/${applicationId}`),
 }
 
 export const schoolAPI = {
@@ -68,6 +69,7 @@ export const adminAPI = {
 
 export const jobAPI = {
   getAllJobs: () => apiClient.get('/jobs'),
+  getJobById: (jobId: number) => apiClient.get(`/jobs/${jobId}`),
 }
 
 export default apiClient

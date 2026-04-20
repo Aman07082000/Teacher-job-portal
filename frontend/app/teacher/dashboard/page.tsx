@@ -61,7 +61,7 @@ export default function TeacherDashboard() {
         {/* Search Jobs */}
         <div className="card">
           <div className="flex items-center gap-3">
-            <FiSearch className="w-6 h-6 text-gray-400" />
+            <FiSearch className="w-6 h-6 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search jobs by title or location..."
@@ -78,7 +78,7 @@ export default function TeacherDashboard() {
           {loading ? (
             <div className="text-center py-8">Loading jobs...</div>
           ) : filteredJobs.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">No jobs found</div>
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">No jobs found</div>
           ) : (
             filteredJobs.map((job) => (
               <div key={job.id} className="card hover:shadow-lg transition-shadow">
@@ -87,8 +87,8 @@ export default function TeacherDashboard() {
                     <h3 className="text-xl font-bold text-blue-600 mb-2">
                       {job.title}
                     </h3>
-                    <p className="text-gray-600 mb-3">{job.description}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">{job.description}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-1">
                         <FiMapPin className="w-4 h-4" />
                         {job.location}

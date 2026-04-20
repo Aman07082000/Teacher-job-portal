@@ -72,7 +72,7 @@ export default function SchoolDashboard() {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Active Jobs</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Active Jobs</p>
                 <p className="text-3xl font-bold">{stats.jobs}</p>
               </div>
               <FiFileText className="w-12 h-12 text-blue-600 opacity-20" />
@@ -82,7 +82,7 @@ export default function SchoolDashboard() {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Applicants</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Total Applicants</p>
                 <p className="text-3xl font-bold">{stats.applicants}</p>
               </div>
               <FiUsers className="w-12 h-12 text-green-600 opacity-20" />

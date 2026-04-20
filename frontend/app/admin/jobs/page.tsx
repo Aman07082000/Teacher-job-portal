@@ -44,7 +44,7 @@ export default function MonitorJobs() {
           <div className="text-center py-8">Loading jobs...</div>
         ) : jobs.length === 0 ? (
           <div className="card text-center py-8">
-            <p className="text-gray-500">No jobs found.</p>
+            <p className="text-gray-500 dark:text-gray-400">No jobs found.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -55,8 +55,8 @@ export default function MonitorJobs() {
                     <h3 className="text-xl font-bold text-blue-600 mb-2">
                       {job.title}
                     </h3>
-                    <p className="text-gray-600 mb-2">{job.description}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                    <p className="text-gray-600 dark:text-gray-400 mb-2">{job.description}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
                       <div>📍 {job.location}</div>
                       <div>📚 {job.subject_expertise}</div>
                       <div>📅 {new Date(job.posted_at).toLocaleDateString()}</div>
