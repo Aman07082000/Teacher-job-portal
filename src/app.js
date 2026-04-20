@@ -6,6 +6,8 @@ import teacherRoutes from './routes/teacher.routes.js';
 import schoolRoutes from './routes/school.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import jobRoutes from './routes/job.routes.js';
+import featuresRoutes from './routes/features.routes.js';
+import publicRoutes from './routes/public.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
 
 const app = express();
@@ -32,9 +34,11 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/teachers', teacherRoutes);
+app.use('/api/features', featuresRoutes);
 app.use('/api/schools', schoolRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/public', publicRoutes);
 
 // Error handling
 app.use(errorMiddleware);

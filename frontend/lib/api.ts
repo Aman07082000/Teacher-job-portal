@@ -72,4 +72,53 @@ export const jobAPI = {
   getJobById: (jobId: number) => apiClient.get(`/jobs/${jobId}`),
 }
 
+// ============ NEW FEATURES API ============
+
+export const featuresAPI = {
+  // Saved Jobs
+  saveJob: (jobId: number) => apiClient.post(`/features/saved-jobs/${jobId}`),
+  removeSavedJob: (jobId: number) => apiClient.delete(`/features/saved-jobs/${jobId}`),
+  getSavedJobs: () => apiClient.get('/features/saved-jobs'),
+  checkSavedJob: (jobId: number) => apiClient.get(`/features/saved-jobs/${jobId}/check`),
+  getSavedJobsCount: () => apiClient.get('/features/saved-jobs/count'),
+
+  // Job Alerts
+  createJobAlert: (data: any) => apiClient.post('/features/job-alerts', data),
+  getJobAlerts: () => apiClient.get('/features/job-alerts'),
+  updateJobAlert: (alertId: number, data: any) => apiClient.put(`/features/job-alerts/${alertId}`, data),
+  deleteJobAlert: (alertId: number) => apiClient.delete(`/features/job-alerts/${alertId}`),
+
+  // Followed Schools
+  followSchool: (schoolId: number) => apiClient.post(`/features/followed-schools/${schoolId}`),
+  unfollowSchool: (schoolId: number) => apiClient.delete(`/features/followed-schools/${schoolId}`),
+  getFollowedSchools: () => apiClient.get('/features/followed-schools'),
+  checkFollowingSchool: (schoolId: number) => apiClient.get(`/features/followed-schools/${schoolId}/check`),
+
+  // Profile Strength
+  getProfileStrength: (teacherId: number) => apiClient.get(`/features/profile-strength/${teacherId}`),
+  updateProfileStrength: (data: any) => apiClient.put('/features/profile-strength', data),
+  calculateProfileStrength: () => apiClient.post('/features/profile-strength/calculate'),
+
+  // Job Match Score
+  getJobMatchScore: (jobId: number) => apiClient.get(`/features/match-score/${jobId}`),
+  calculateAllMatchScores: (jobIds: number[]) => apiClient.post('/features/match-scores', { jobIds }),
+
+  // Statistics
+  getTeacherStats: (teacherId?: number) =>
+    teacherId 
+      ? apiClient.get(`/features/stats/${teacherId}`)
+      : apiClient.get('/features/stats'),
+
+  // Reviews (Public)
+  createReview: (data: any) => apiClient.post('/public/reviews', data),
+  getReviews: (userId: number) => apiClient.get(`/public/reviews/${userId}`),
+  updateReview: (reviewId: number, data: any) => apiClient.put(`/public/reviews/${reviewId}`, data),
+  deleteReview: (reviewId: number) => apiClient.delete(`/public/reviews/${reviewId}`),
+
+  // School Profiles (Public)
+  getSchoolProfile: (schoolId: number) => apiClient.get(`/public/schools/${schoolId}/profile`),
+  getSchoolJobs: (schoolId: number) => apiClient.get(`/public/schools/${schoolId}/jobs`),
+  getFollowersCount: (schoolId: number) => apiClient.get(`/public/schools/${schoolId}/followers-count`),
+}
+
 export default apiClient
