@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin.routes.js';
 import jobRoutes from './routes/job.routes.js';
 import featuresRoutes from './routes/features.routes.js';
 import publicRoutes from './routes/public.routes.js';
+import searchRoutes from './routes/search.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
 
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/schools', schoolRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api', searchRoutes);
 
 // Error handling
 app.use(errorMiddleware);

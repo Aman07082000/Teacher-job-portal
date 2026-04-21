@@ -30,9 +30,10 @@ export default function Navbar() {
       return [
         { label: 'Dashboard', href: '/teacher/dashboard' },
         { label: 'Browse Jobs', href: '/teacher/browse-jobs' },
+        { label: 'Categories', href: '/teacher/categories' },
         { label: 'Saved Jobs', href: '/teacher/saved-jobs' },
+        { label: 'Compare Jobs', href: '/teacher/job-comparison' },
         { label: 'Applications', href: '/teacher/applications' },
-        { label: 'Video Interviews', href: '/video-interviews' },
         { label: 'Alerts', href: '/alerts' },
         { label: 'My Profile', href: '/teacher/profile' },
       ]
@@ -42,7 +43,6 @@ export default function Navbar() {
         { label: 'Post Job', href: '/school/post-job' },
         { label: 'Manage Jobs', href: '/school/manage-jobs' },
         { label: 'Pricing', href: '/school/pricing' },
-        { label: 'Video Interviews', href: '/video-interviews' },
         { label: 'Applicants', href: '/school/applicants' },
         { label: 'Company Profile', href: '/school/profile' },
       ]

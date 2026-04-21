@@ -1,53 +1,381 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { searchAPI, featuresAPI } from '@/lib/api'
+import SaveJobButton from '@/components/SaveJobButton'
+import JobMatchScore from '@/components/JobMatchScore'
 import Link from 'next/link'
-import { FiSearch, FiMapPin, FiDollarSign, FiBookmark, FiFilter, FiX } from 'react-icons/fi'
-import RoleGuard from '@/components/RoleGuard'
 
 interface Job {
   id: number
   title: string
-  school_name: string
-  location: string
-  salary_min: number
-  salary_max: number
-  experience_required: number
-  job_type: string
   description: string
-  posted_date: string
-}
-
-interface Filters {
   location: string
-  salaryMin: number
-  salaryMax: number
-  experience: string
-  jobType: string
-  search: string
+  subject_expertise: string
+  salary_range: number
+  posted_at: string
 }
 
-const mockJobs: Job[] = [
-  {
-    id: 1,
-    title: 'Senior English Teacher',
-    school_name: 'Delhi Public School',
-    location: 'New Delhi',
-    salary_min: 30000,
-    salary_max: 50000,
-    experience_required: 5,
-    job_type: 'Full-time',
-    description: 'Seek experienced English teacher for senior classes.',
-    posted_date: '2 days ago'
-  },
-  {
-    id: 2,
-    title: 'Mathematics Teacher',
-    school_name: 'The Heritage School',
-    location: 'Mumbai',
-    salary_min: 25000,
-    salary_max: 40000,
-    experience_required: 3,
+interface SearchFilters {
+  title?: string
+  location?: string
+  subject?: string
+  minSalary?: number
+  maxSalary?: number
+  sortBy?: string
+}
+
+export default function AdvancedJobSearch() {
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [filters, setFilters] = useState<SearchFilters>({})
+  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState('recent')
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [categories, setCategories] = useState<any[]>([])
+  const [locations, setLocations] = useState<any[]>([])
+  const [saveMessage, setSaveMessage] = useState('')
+
+  // Fetch jobs with current filters
+  const fetchJobs = useCallback(async () => {
+    setLoading(true)
+    try {
+      const response = await searchAPI.advancedSearch({
+        ...filters,
+        sortBy,
+        page,
+        pageSize: 20,
+      })
+      setJobs(response.data.jobs)
+      setTotalPages(response.data.pagination.totalPages)
+      
+      // Save search to history
+      await searchAPI.saveSearch({
+        searchQuery: searchQuery || 'Browse Jobs',
+        filters,
+      })
+    } catch (error) {
+      console.error('Error fetching jobs:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [filters, sortBy, page, searchQuery])
+
+  // Fetch categories and locations
+  useEffect(() => {
+    const fetchCategoriesAndLocations = async () => {
+      try {
+        const [catRes, locRes] = await Promise.all([
+          searchAPI.getJobCategories(),
+          searchAPI.getLocationStats(),
+        ])
+        setCategories(catRes.data)
+        setLocations(locRes.data)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+    fetchCategoriesAndLocations()
+  }, [])
+
+  // Fetch search suggestions
+  useEffect(() => {
+    if (searchQuery.length > 1) {
+      const timer = setTimeout(async () => {
+        try {
+          const response = await searchAPI.getSearchSuggestions(searchQuery)
+          setSuggestions(response.data)
+          setShowSuggestions(true)
+        } catch (error) {
+          console.error('Error fetching suggestions:', error)
+        }
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [searchQuery])
+
+  useEffect(() => {
+    fetchJobs()
+  }, [fetchJobs])
+
+  const handleFilterChange = (key: string, value: any) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+    setPage(1)
+  }
+
+  const handleCategoryClick = (category: string) => {
+    handleFilterChange('subject', category)
+    setSearchQuery('')
+  }
+
+  const handleLocationClick = (location: string) => {
+    handleFilterChange('location', location)
+  }
+
+  const handleSuggestionClick = (suggestion: any) => {
+    if (suggestion.type === 'title') {
+      handleFilterChange('title', suggestion.text)
+    } else if (suggestion.type === 'location') {
+      handleFilterChange('location', suggestion.text)
+    } else if (suggestion.type === 'subject') {
+      handleFilterChange('subject', suggestion.text)
+    }
+    setSearchQuery('')
+    setShowSuggestions(false)
+  }
+
+  const clearFilters = () => {
+    setFilters({})
+    setSearchQuery('')
+    setPage(1)
+  }
+
+  const handleSaveSearch = async () => {
+    try {
+      const name = `Search - ${new Date().toLocaleDateString()}`
+      await searchAPI.createSavedSearch({
+        name,
+        search_query: searchQuery,
+        filters,
+      })
+      setSaveMessage('Search saved successfully!')
+      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (error) {
+      console.error('Error saving search:', error)
+      setSaveMessage('Failed to save search')
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Search Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-4">Find Your Perfect Job</h1>
+          
+          {/* Search Bar with Suggestions */}
+          <div className="relative mb-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by job title, location, or subject..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto">
+                {suggestions.map((suggestion, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b last:border-b-0 flex items-center gap-2"
+                  >
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      {suggestion.type}
+                    </span>
+                    {suggestion.text}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Filter Controls */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Job Title"
+              value={filters.title || ''}
+              onChange={(e) => handleFilterChange('title', e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <select
+              value={filters.location || ''}
+              onChange={(e) => handleFilterChange('location', e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Locations</option>
+              {locations.map((loc, idx) => (
+                <option key={idx} value={loc.location}>
+                  {loc.location} ({loc.job_count})
+                </option>
+              ))}
+            </select>
+            <select
+              value={filters.subject || ''}
+              onChange={(e) => handleFilterChange('subject', e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Subjects</option>
+              {categories.map((cat, idx) => (
+                <option key={idx} value={cat.category}>
+                  {cat.category} ({cat.count})
+                </option>
+              ))}
+            </select>
+            <select
+              value={sortBy}
+              onChange={(e) => {
+                setSortBy(e.target.value)
+                setPage(1)
+              }}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="recent">Most Recent</option>
+              <option value="salary-high">Highest Salary</option>
+              <option value="salary-low">Lowest Salary</option>
+            </select>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveSearch}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            >
+              💾 Save Search
+            </button>
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+            >
+              Clear Filters
+            </button>
+            {saveMessage && (
+              <div className="px-4 py-2 bg-green-100 text-green-800 rounded-lg">
+                {saveMessage}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar - Categories & Locations */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow p-6 sticky top-4">
+              <h3 className="font-semibold mb-4">Top Categories</h3>
+              <div className="space-y-2 mb-6">
+                {categories.slice(0, 8).map((cat, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleCategoryClick(cat.category)}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-blue-100 rounded-lg"
+                  >
+                    {cat.category} <span className="float-right text-gray-500">({cat.count})</span>
+                  </button>
+                ))}
+              </div>
+
+              <h3 className="font-semibold mb-4">Top Locations</h3>
+              <div className="space-y-2">
+                {locations.slice(0, 8).map((loc, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleLocationClick(loc.location)}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-blue-100 rounded-lg"
+                  >
+                    {loc.location} <span className="float-right text-gray-500">({loc.job_count})</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content - Job Listings */}
+          <div className="lg:col-span-3">
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+              </div>
+            ) : jobs.length > 0 ? (
+              <>
+                <div className="space-y-4">
+                  {jobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="bg-white rounded-lg shadow hover:shadow-lg transition p-6 border-l-4 border-blue-500"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h3 className="text-xl font-semibold mb-2">{job.title}</h3>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                              {job.location}
+                            </span>
+                            <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
+                              {job.subject_expertise}
+                            </span>
+                            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                              ₹{job.salary_range.toLocaleString()}/month
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <SaveJobButton jobId={job.id} />
+                          <p className="text-xs text-gray-500 mt-2">
+                            {new Date(job.posted_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-700 mb-4 line-clamp-2">
+                        {job.description}
+                      </p>
+
+                      <div className="flex justify-between items-center">
+                        <JobMatchScore jobId={job.id} />
+                        <Link
+                          href={`/teacher/jobs/${job.id}`}
+                          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="mt-8 flex justify-center items-center gap-2">
+                  <button
+                    onClick={() => setPage(Math.max(1, page - 1))}
+                    disabled={page === 1}
+                    className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+                  <span className="px-4 py-2">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage(Math.min(totalPages, page + 1))}
+                    disabled={page === totalPages}
+                    className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="bg-white rounded-lg shadow p-12 text-center">
+                <p className="text-xl text-gray-500 mb-4">No jobs found matching your criteria</p>
+                <button
+                  onClick={clearFilters}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  Clear Filters & Try Again
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
     job_type: 'Full-time',
     description: 'Mathematics teacher needed for grades 8-10.',
     posted_date: '3 days ago'

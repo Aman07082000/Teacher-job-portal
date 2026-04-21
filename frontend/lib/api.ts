@@ -121,4 +121,41 @@ export const featuresAPI = {
   getFollowersCount: (schoolId: number) => apiClient.get(`/public/schools/${schoolId}/followers-count`),
 }
 
+// ============ SEARCH & DISCOVERY API ============
+
+export const searchAPI = {
+  // Search History
+  saveSearch: (data: any) => apiClient.post('/search/save', data),
+  getSearchHistory: (limit?: number) => apiClient.get('/search/history', { params: { limit } }),
+  clearSearchHistory: () => apiClient.delete('/search/history'),
+  deleteSearchHistoryItem: (searchId: number) => apiClient.delete(`/search/history/${searchId}`),
+
+  // Saved Searches
+  createSavedSearch: (data: any) => apiClient.post('/saved-searches', data),
+  getSavedSearches: () => apiClient.get('/saved-searches'),
+  updateSavedSearch: (searchId: number, data: any) => apiClient.put(`/saved-searches/${searchId}`, data),
+  deleteSavedSearch: (searchId: number) => apiClient.delete(`/saved-searches/${searchId}`),
+
+  // Job Comparison
+  createComparison: (data: any) => apiClient.post('/comparisons', data),
+  getComparisons: () => apiClient.get('/comparisons'),
+  addJobToComparison: (comparisonId: number, jobId: number) =>
+    apiClient.post(`/comparisons/${comparisonId}/jobs`, { jobId }),
+  removeJobFromComparison: (comparisonId: number, jobId: number) =>
+    apiClient.delete(`/comparisons/${comparisonId}/jobs`, { data: { jobId } }),
+  deleteComparison: (comparisonId: number) => apiClient.delete(`/comparisons/${comparisonId}`),
+
+  // Advanced Search
+  advancedSearch: (filters: any) => apiClient.get('/search', { params: filters }),
+  getSearchSuggestions: (query: string) => apiClient.get('/search/suggestions', { params: { query } }),
+
+  // Categories & Locations
+  getJobCategories: () => apiClient.get('/categories'),
+  getLocationStats: () => apiClient.get('/locations'),
+
+  // Recommended & Trending
+  getRecommendedJobs: (limit?: number) => apiClient.get('/recommended', { params: { limit } }),
+  getTrendingJobs: () => apiClient.get('/trending'),
+}
+
 export default apiClient

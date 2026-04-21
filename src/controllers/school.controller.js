@@ -38,3 +38,23 @@ export const shortlistCandidate = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getSchoolProfile = async (req, res, next) => {
+  try {
+    const { schoolId } = req.params;
+    // TODO: Implement fetching school profile from database
+    res.json({ schoolId, message: 'School profile endpoint' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getSchoolJobs = async (req, res, next) => {
+  try {
+    const { schoolId } = req.params;
+    // TODO: Implement fetching school jobs from database
+    res.json({ schoolId, message: 'School jobs endpoint' });
+  } catch (err) {
+    next(err);
+  }
+};
