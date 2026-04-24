@@ -40,10 +40,12 @@ export default function Navbar() {
     } else if (user.role === 'school') {
       return [
         { label: 'Dashboard', href: '/school/dashboard' },
+        { label: 'Analytics', href: '/school/analytics' },
+        { label: 'Applicants', href: '/school/applicants' },
+        { label: 'Hiring Pipeline', href: '/school/hiring-pipeline' },
         { label: 'Post Job', href: '/school/post-job' },
         { label: 'Manage Jobs', href: '/school/manage-jobs' },
         { label: 'Pricing', href: '/school/pricing' },
-        { label: 'Applicants', href: '/school/applicants' },
         { label: 'Company Profile', href: '/school/profile' },
       ]
     }

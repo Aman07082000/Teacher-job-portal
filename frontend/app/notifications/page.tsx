@@ -14,20 +14,7 @@ export default function NotificationsPage() {
       </div>
     </RoleGuard>
   )
-}
-    type: 'message',
-    title: 'New Message from Delhi Public School',
-    message: 'They are interested in scheduling an interview with you',
-    timestamp: '2 hours ago',
-    read: false,
-    link: '/messages',
-    icon: <FiMessageSquare className="w-5 h-5" />,
-  },
-  {
-    id: 3,
-    type: 'alert',
-    title: 'Job Alert: Perfect Match Found',
-    message: 'A new English Teacher position at The Heritage School matches your profile',
+}e: 'A new English Teacher position at The Heritage School matches your profile',
     timestamp: '1 day ago',
     read: true,
     link: '/teacher/browse-jobs',

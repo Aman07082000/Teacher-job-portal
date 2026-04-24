@@ -213,5 +213,56 @@ export const advancedAPI = {
     apiClient.post('/premium/upgrade', { tier, durationDays }),
 }
 
+// School Features API
+export const schoolFeaturesAPI = {
+  // Analytics
+  getSchoolAnalytics: () =>
+    apiClient.get('/school-features/analytics'),
+  getSchoolProfileStrength: () =>
+    apiClient.get('/school-features/profile-strength'),
+
+  // Applicant Management
+  getSchoolApplicants: (page: number = 1, limit: number = 50) =>
+    apiClient.get('/school-features/applicants', { params: { page, limit } }),
+  getApplicantDetails: (applicationId: number) =>
+    apiClient.get(`/school-features/applicants/${applicationId}`),
+  updateApplicationStatus: (applicationId: number, status: string) =>
+    apiClient.put(`/school-features/applicants/${applicationId}/status`, { status }),
+
+  // Job Performance
+  getJobPerformance: (jobId: number) =>
+    apiClient.get(`/school-features/jobs/${jobId}/performance`),
+  getAllJobPerformances: () =>
+    apiClient.get('/school-features/jobs/performance/all'),
+
+  // Shortlist Management
+  createShortlist: (applicationId: number, notes?: string) =>
+    apiClient.post('/school-features/shortlist', { applicationId, notes }),
+  getSchoolShortlist: () =>
+    apiClient.get('/school-features/shortlist'),
+  removeFromShortlist: (applicationId: number) =>
+    apiClient.delete(`/school-features/shortlist/${applicationId}`),
+
+  // Candidate Ratings (School rating Teachers)
+  rateCandidateBySchool: (teacherId: number, rating: number, feedback?: string) =>
+    apiClient.post('/school-features/ratings', { teacherId, rating, feedback }),
+  getCandidateRatings: (teacherId: number) =>
+    apiClient.get(`/school-features/ratings/${teacherId}`),
+
+  // Interview Management
+  scheduleInterview: (applicationId: number, interviewDate: string, interviewType: string, notes?: string) =>
+    apiClient.post('/school-features/interviews/schedule', { applicationId, interviewDate, interviewType, notes }),
+  getScheduledInterviews: () =>
+    apiClient.get('/school-features/interviews'),
+
+  // Hiring Pipeline
+  getHiringPipeline: () =>
+    apiClient.get('/school-features/hiring-pipeline'),
+
+  // Candidate Comparison
+  compareCandidates: (applicationIds: number[]) =>
+    apiClient.post('/school-features/candidates/compare', { applicationIds }),
+}
+
 export default apiClient
 

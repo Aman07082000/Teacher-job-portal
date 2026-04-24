@@ -10,6 +10,7 @@ import featuresRoutes from './routes/features.routes.js';
 import publicRoutes from './routes/public.routes.js';
 import searchRoutes from './routes/search.routes.js';
 import advancedRoutes from './routes/advanced.routes.js';
+import schoolFeaturesRoutes from './routes/school.features.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
 
 const app = express();
@@ -38,6 +39,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/teachers', teacherRoutes);
 app.use('/api/features', featuresRoutes);
 app.use('/api/schools', schoolRoutes);
+app.use('/api/school-features', schoolFeaturesRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/public', publicRoutes);
