@@ -33,8 +33,8 @@ export default function Navbar() {
         { label: 'Categories', href: '/teacher/categories' },
         { label: 'Saved Jobs', href: '/teacher/saved-jobs' },
         { label: 'Compare Jobs', href: '/teacher/job-comparison' },
+        { label: 'Analytics', href: '/teacher/analytics' },
         { label: 'Applications', href: '/teacher/applications' },
-        { label: 'Alerts', href: '/alerts' },
         { label: 'My Profile', href: '/teacher/profile' },
       ]
     } else if (user.role === 'school') {

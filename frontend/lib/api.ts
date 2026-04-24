@@ -158,4 +158,60 @@ export const searchAPI = {
   getTrendingJobs: () => apiClient.get('/trending'),
 }
 
+// ============ ADVANCED FEATURES API ============
+
+export const advancedAPI = {
+  // Analytics
+  getAnalyticsDashboard: () => apiClient.get('/analytics/dashboard'),
+
+  // Skill Endorsements
+  endorseSkill: (teacherId: number, skill: string) =>
+    apiClient.post('/endorsements', { teacherId, skill }),
+  getSkillEndorsements: (teacherId: number) =>
+    apiClient.get(`/endorsements/${teacherId}`),
+  removeEndorsement: (teacherId: number, skill: string) =>
+    apiClient.delete(`/endorsements/${teacherId}/${skill}`),
+
+  // Interview Experiences
+  shareInterviewExperience: (data: any) =>
+    apiClient.post('/interview-experiences', data),
+  getSchoolInterviewExperiences: (schoolId: number) =>
+    apiClient.get(`/interview-experiences/school/${schoolId}`),
+  getJobInterviewExperiences: (jobId: number) =>
+    apiClient.get(`/interview-experiences/job/${jobId}`),
+
+  // Application Timeline
+  getApplicationTimeline: (applicationId: number) =>
+    apiClient.get(`/application-timeline/${applicationId}`),
+
+  // Notifications
+  getUnreadNotifications: (limit?: number) =>
+    apiClient.get('/notifications/unread', { params: { limit } }),
+  getAllNotifications: (limit?: number) =>
+    apiClient.get('/notifications', { params: { limit } }),
+  markNotificationAsRead: (notificationId: number) =>
+    apiClient.put(`/notifications/${notificationId}/read`),
+  markAllNotificationsAsRead: () =>
+    apiClient.put('/notifications/mark-all-read'),
+
+  // Interview Resources
+  getInterviewResources: (subject?: string) =>
+    apiClient.get('/interview-resources', { params: { subject } }),
+  viewResource: (resourceId: number) =>
+    apiClient.get(`/interview-resources/${resourceId}/view`),
+
+  // Two-Way Ratings
+  rateUser: (ratedId: number, rating: number, feedback: string, ratingType: string) =>
+    apiClient.post('/ratings', { ratedId, rating, feedback, ratingType }),
+  getUserRatings: (userId: number) =>
+    apiClient.get(`/ratings/${userId}`),
+
+  // Premium Features
+  getPremiumStatus: () =>
+    apiClient.get('/premium/status'),
+  upgradeToPremium: (tier: string, durationDays?: number) =>
+    apiClient.post('/premium/upgrade', { tier, durationDays }),
+}
+
 export default apiClient
+

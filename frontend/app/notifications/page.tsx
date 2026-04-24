@@ -1,33 +1,20 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { FiBell, FiCheckCircle, FiAlertCircle, FiMessageSquare, FiTrash2, FiFilter } from 'react-icons/fi'
+import React from 'react'
+import NotificationsCenter from '@/components/NotificationsCenter'
+import RoleGuard from '@/components/RoleGuard'
 
-interface Notification {
-  id: number
-  type: 'application' | 'message' | 'alert' | 'update'
-  title: string
-  message: string
-  timestamp: string
-  read: boolean
-  link?: string
-  icon: React.ReactNode
+export default function NotificationsPage() {
+  return (
+    <RoleGuard requiredRole="teacher">
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <NotificationsCenter />
+        </div>
+      </div>
+    </RoleGuard>
+  )
 }
-
-const mockNotifications: Notification[] = [
-  {
-    id: 1,
-    type: 'application',
-    title: 'New Application Received',
-    message: 'Sarah Johnson applied for "Senior Mathematics Teacher" position',
-    timestamp: '5 minutes ago',
-    read: false,
-    link: '/teacher/applications',
-    icon: <FiCheckCircle className="w-5 h-5" />,
-  },
-  {
-    id: 2,
     type: 'message',
     title: 'New Message from Delhi Public School',
     message: 'They are interested in scheduling an interview with you',
